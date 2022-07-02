@@ -1,2 +1,5 @@
 /node_modules
 .env
+settings.js
+weather-calendar-key.json
+test.js
