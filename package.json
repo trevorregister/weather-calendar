@@ -1,0 +1,19 @@
+{
+  "name": "weather-calendar",
+  "version": "1.0.0",
+  "description": "adds 2 week daily weather forcast to gcal",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trevorregister/weather-calendar.git"
+  },
+  "author": "Trevor Register",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/trevorregister/weather-calendar/issues"
+  },
+  "homepage": "https://github.com/trevorregister/weather-calendar#readme"
+}
