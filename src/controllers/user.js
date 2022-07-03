@@ -19,8 +19,7 @@ exports.newUser = async function (req,res){
         })
 
         await user.save()
-        res.status(201).send('User successfully created')
-        return user
+        return res.status(201).send('User successfully created')
     }
     catch (error){
         console.log(error)
@@ -36,7 +35,7 @@ exports.login = async function (req, res){
             res.status(200).header('x-auth-token', token).send(user)
         }
 
-        else res.status(401).send('Username or password incorrect')
+        else return res.status(401).send('Username or password incorrect')
     }
 
     catch (error){
@@ -46,5 +45,5 @@ exports.login = async function (req, res){
 
 exports.me = async function (req, res){
     let user = await User.find({"_id":req.user._id}).select('-hash')
-    res.status(200).send(user)
+    return res.status(200).send(user)
 }
