@@ -3,17 +3,23 @@ const dotenv = require('dotenv').config()
 const cheerio = require('cheerio')
 
 exports.forecast = async function (req, res){
-    const response = await axios.get('https://weather.com/weather/tenday/l/Marietta+GA?canonicalCityId=cbc1689619d2c1dd1ee27ff61e72b5ead7f7f24a76e15150d52b16224471599b')
-    const $ = cheerio.load(response.data)
     const forecast = []
+        try {
+            var response = await axios.get('https://weather.com/weather/tenday/l/Marietta+GA?canonicalCityId=cbc1689619d2c1dd1ee27ff61e72b5ead7f7f24a76e15150d52b16224471599b')
+        }
+        catch (err){
+            res.status(404).send(`${err.code}`)
+            throw new Error(`${err.code} - weather not found`)
+        }
 
-    for (let i = 0; i < 9; i++){
+    const $ = cheerio.load(response.data)
+    for (let i = 0; i < 2; i++){
         let summary = $(`#detailIndex${i} > div > div.DailyContent--DailyContent--KcPxD > p`).text()
         let temp = $(`#detailIndex${i} > div > div.DailyContent--DailyContent--KcPxD > div > div:nth-child(1) > span`).text()
         let rainChance = $(`#detailIndex${i} > div > div.DailyContent--DailyContent--KcPxD > div > div.DailyContent--dataPoints--1Nya6 > div:nth-child(1) > span`).text()
 
         var weather = {
-            dayIndex: i+1,
+            dayIndex: i,
             summary: summary,
             temp: {
                 low: temp.substring(0,2),
@@ -27,7 +33,7 @@ exports.forecast = async function (req, res){
         forecast.push(weather)
     }
 
-    //res.status(200).send(forecast)
+    res.status(200).send(forecast)
     return forecast
 
 }
