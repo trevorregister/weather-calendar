@@ -13,15 +13,15 @@ exports.forecast = async function (req, res){
         let rainChance = $(`#detailIndex${i} > div > div.DailyContent--DailyContent--KcPxD > div > div.DailyContent--dataPoints--1Nya6 > div:nth-child(1) > span`).text()
 
         var weather = {
-            day: i+1,
+            dayIndex: i+1,
             summary: summary,
             temp: {
                 low: temp.substring(0,2),
                 high: temp.substring(3,5)
             },
             rainChance: {
-                low: rainChance.substring(0,2),
-                high: rainChance.substring(3,5)
+                day: rainChance.substring(0,2),
+                night: rainChance.substring(3,5)
             }
         }
         forecast.push(weather)

@@ -46,7 +46,7 @@ exports.forecastWeather = async function(req, res){
     const forecast = await weather.forecast()
     for (let day of forecast){
         var title = `${day.temp.low}\u00B0/${day.temp.high}\u00B0`
-        var date = new Date(Date.now() + day.day * (3600 * 1000 * 24)).toISOString()
+        var date = new Date(Date.now() + day.dayIndex * (3600 * 1000 * 24)).toISOString()
         var event = {
             'summary': title,
             'description': day.summary,
