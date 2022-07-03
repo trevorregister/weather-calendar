@@ -1,6 +1,6 @@
 const { google } = require('googleapis')
 const dotenv = require('dotenv').config()
-const settings = require('../../settings')
+const settings = require('../../settings.json')
 const weather = require('./weather')
 
 const SCOPES = 'https://www.googleapis.com/auth/calendar';
