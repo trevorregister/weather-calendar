@@ -17,7 +17,7 @@ const jwtClient = new google.auth.JWT(
 )
 
 const auth = new google.auth.GoogleAuth({
-    keyFile: './weather-calendar-key.json',
+    keyFile: './settings.json',
     scopes: SCOPES
 })
 
@@ -43,27 +43,38 @@ const calendar = google.calendar({
 } */
 
 exports.forecastWeather = async function(req, res){
-    const forecast = await weather.forecast()
-    for (let day of forecast){
-        var title = `${day.temp.low}\u00B0/${day.temp.high}\u00B0`
-        var date = new Date(Date.now() + day.dayIndex * (3600 * 1000 * 24)).toISOString()
-        var event = {
-            'summary': title,
-            'description': day.summary,
-            'start': {
-                'date': date.substring(0, date.indexOf('T'))
-            },
-            'end': {
-                'date': date.substring(0, date.indexOf('T'))
-            }
-        }
-
-        const client = await auth.getClient()
-        
-        calendar.events.insert({
-            auth: auth,
-            calendarId: GOOGLE_CALENDAR_ID,
-            resource: event
-        })
+    try{    
+        var forecast = await weather.forecast()
+        await auth.getClient()
     }
+    catch(err){
+        res.status(404).send(`${err.code}`)
+        throw new Error(`${err.code}`)
+    }
+    try{
+        for (let day of forecast){
+            var title = `${day.temp.low}\u00B0/${day.temp.high}\u00B0`
+            var date = new Date(Date.now() + day.dayIndex * (3600 * 1000 * 24)).toISOString()
+            var event = {
+                'summary': title,
+                'description': day.summary,
+                'start': {
+                    'date': date.substring(0, date.indexOf('T'))
+                },
+                'end': {
+                    'date': date.substring(0, date.indexOf('T'))
+                }
+            }
+
+            calendar.events.insert({
+                auth: auth,
+                calendarId: GOOGLE_CALENDAR_ID,
+                resource: event
+            })
+        }
+    }
+    catch(error){
+        res.status(400).send(`${err.code}`)
+    }
+    res.status(201).send('forecast posted')
 }
