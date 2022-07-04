@@ -4,17 +4,18 @@ const cookieParser = require('cookie-parser')
 const saltRounds = 10
 const { google } = require('googleapis')
 const settings = require('../../settings.json')
+const errors = require ('../utils/errors')
+
 
 const SCOPES = 'https://www.googleapis.com/auth/calendar';
 const GOOGLE_PRIVATE_KEY = settings.private_key
 const GOOGLE_CLIENT_EMAIL = settings.client_email
 const GOOGLE_PROJECT_NUMBER = process.env.GOOGLE_PROJECT_NUMBER
-const GOOGLE_CALENDAR_ID = process.env.CALENDAR_ID
 
-exports.newUser = async function (req,res){
+exports.newUser = async function (req, res, next){
      try {
         var user = await User.findOne({"email":req.body.email.toLowerCase()})
-        if (user) return res.status(400).send(`User with ${req.body.email} aleady exists`)
+        if (user) throw new errors.api400(`${req.body.email} already exists`)
 
         const hash = await bcrypt.hash(req.body.password, saltRounds)
         const location = req.body.location.slice( req.body.location.indexOf('/l'))
@@ -35,12 +36,12 @@ exports.newUser = async function (req,res){
 
         return res.status(201).send(`${user} - registration successful`)
     }
-    catch (error){
-        console.log(error)
+    catch (err){
+        next(err)
     } 
 }
 
-exports.login = async function (req, res){
+exports.login = async function (req, res, next){
     try {
         const user = await User.findOne({"email":req.body.email.toLowerCase()})
         const match = await bcrypt.compare(req.body.password, user.hash)
@@ -51,60 +52,72 @@ exports.login = async function (req, res){
             return res.status(200).send('login successful')
         }
 
-        else return res.status(401).send('Invalid credentials')
+        else throw new errors.api401()
     }
 
-    catch (error){
-        return res.status(500).send('server error')
+    catch (err){
+        next(err)
     }
 }
 
-exports.logout = async function (req, res){
+exports.logout = async function (req, res, next){
     try {
-        if(!req.cookies.authcookie) return res.status(400).send('no auth cookie')
+        if(!req.cookies.authcookie) {
+            throw new errors.api400('no authcookie')
+        }
         res.cookie('authcookie', '')
         return res.status(200).send('logged out')
     }
-    catch(error) {
-        return res.status(500).send('server error')
+    catch(err) {
+        next(err)
     }
 }
 
-exports.me = async function (req, res){
-    let user = await User.find({"_id":req.user._id}).select('-hash')
-    return res.status(200).send(user)
+exports.me = async function (req, res, next){
+    try {
+        let user = await User.find({"_id":req.user._id}).select('-hash')
+        if(!user) { throw new errors.api404(`${req.email} not found`) }
+        return res.status(200).send(user)
+    }
+    catch(err) { next(err) }
 }
 
-exports.forecast = async function (req, res){
-    const jwtClient = new google.auth.JWT(
-        GOOGLE_CLIENT_EMAIL,
-        null,
-        GOOGLE_PRIVATE_KEY,
-        SCOPES
-    )
+exports.forecast = async function (req, res, next){
+
+    try {  
+        const jwtClient = new google.auth.JWT(
+            GOOGLE_CLIENT_EMAIL,
+            null,
+            GOOGLE_PRIVATE_KEY,
+            SCOPES
+        )
+        
+        const auth = new google.auth.GoogleAuth({
+            keyFile: './settings.json',
+            scopes: SCOPES
+        })
+        
+        const calendar = google.calendar({
+            version: 'v3',
+            project: GOOGLE_PROJECT_NUMBER,
+            auth: jwtClient
+        })
+
     
-    const auth = new google.auth.GoogleAuth({
-        keyFile: './settings.json',
-        scopes: SCOPES
-    })
-    
-    const calendar = google.calendar({
-        version: 'v3',
-        project: GOOGLE_PROJECT_NUMBER,
-        auth: jwtClient
-    })
+        let user = await User.findOne({"_id": req.user._id}) 
+        let client = await auth.getClient()
 
-    let user = await User.findOne({"_id": req.user._id})
-    let weatherData = await user.getForecast()
+        switch (false){
+            case user:
+                throw new errors.api404(`user not found`)
+            case client:
+                throw new errors.api401('problem with google auth')
+        }
 
-    try {    
-        await auth.getClient()
-    }
-    catch(err){
-        return res.status(404).send(`${err.code}`)
+        let weatherData = await user.getForecast()
+        
+        if(weatherData instanceof Error) { throw new errors.api404('weather not found') } 
 
-    }
-    try{
         for (let day of weatherData.forecast){
             var title = `${weatherData.city} - ${day.temp.low}\u00B0/${day.temp.high}\u00B0`
             var date = new Date(Date.now() + day.dayIndex * (3600 * 1000 * 24)).toISOString()
@@ -124,11 +137,11 @@ exports.forecast = async function (req, res){
                 calendarId: user.calendar.id,
                 resource: event
             })
-        }
-        return res.status(201).send('forecast posted')
     }
+    return res.status(201).send('forecast posted')
+}
     catch(err){
-        return res.status(400).send(`${err}`)
+        next(err)
     }
 }
 
