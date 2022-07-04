@@ -111,12 +111,12 @@ exports.forecast = async function (req, res, next){
             case user:
                 throw new api404(`user not found`)
             case client:
-                throw new errorsapi401('problem with google auth')
+                throw new api401('problem with google auth')
         }
 
         let weatherData = await user.getForecast()
         
-        if(weatherData instanceof Error) { throw new errorsapi404('weather not found') } 
+        if(weatherData instanceof Error) { throw new api404('weather not found') } 
 
         for (let day of weatherData.forecast){
             var title = `${weatherData.city} - ${day.temp.low}\u00B0/${day.temp.high}\u00B0`
