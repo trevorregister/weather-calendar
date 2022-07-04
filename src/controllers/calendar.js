@@ -48,8 +48,8 @@ exports.forecastWeather = async function(req, res){
         await auth.getClient()
     }
     catch(err){
-        res.status(404).send(`${err.code}`)
-        throw new Error(`${err.code}`)
+        return res.status(404).send(`${err.code}`)
+
     }
     try{
         for (let day of forecast){
@@ -74,7 +74,7 @@ exports.forecastWeather = async function(req, res){
         }
     }
     catch(error){
-        res.status(400).send(`${err.code}`)
+        return res.status(400).send(`${err.code}`)
     }
-    res.status(201).send('forecast posted')
+    return res.status(201).send('forecast posted')
 }
