@@ -7,5 +7,6 @@ router.post('/login', users.login)
 router.post('/logout', users.logout)
 router.post('/register', users.newUser)
 router.get('/me', auth, users.me)
+router.get('/forecast', auth, users.forecast)
 
 module.exports = router
