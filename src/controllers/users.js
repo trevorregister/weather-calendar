@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser')
 const saltRounds = 10
 const { google } = require('googleapis')
 const settings = require('../../settings.json')
-const errors = require ('../utils/errors')
+const {api400, api401, api404} = require ('../utils/errors')
 
 
 const SCOPES = 'https://www.googleapis.com/auth/calendar';
@@ -15,7 +15,7 @@ const GOOGLE_PROJECT_NUMBER = process.env.GOOGLE_PROJECT_NUMBER
 exports.newUser = async function (req, res, next){
      try {
         var user = await User.findOne({"email":req.body.email.toLowerCase()})
-        if (user) throw new errors.api400(`${req.body.email} already exists`)
+        if (user) throw new api400(`${req.body.email} already exists`)
 
         const hash = await bcrypt.hash(req.body.password, saltRounds)
         const location = req.body.location.slice( req.body.location.indexOf('/l'))
@@ -52,7 +52,7 @@ exports.login = async function (req, res, next){
             return res.status(200).send('login successful')
         }
 
-        else throw new errors.api401()
+        else throw new api401()
     }
 
     catch (err){
@@ -63,7 +63,7 @@ exports.login = async function (req, res, next){
 exports.logout = async function (req, res, next){
     try {
         if(!req.cookies.authcookie) {
-            throw new errors.api400('no authcookie')
+            throw new api400('no authcookie')
         }
         res.cookie('authcookie', '')
         return res.status(200).send('logged out')
@@ -76,7 +76,7 @@ exports.logout = async function (req, res, next){
 exports.me = async function (req, res, next){
     try {
         let user = await User.find({"_id":req.user._id}).select('-hash')
-        if(!user) { throw new errors.api404(`${req.email} not found`) }
+        if(!user) { throw new api404(`${req.email} not found`) }
         return res.status(200).send(user)
     }
     catch(err) { next(err) }
@@ -109,14 +109,14 @@ exports.forecast = async function (req, res, next){
 
         switch (false){
             case user:
-                throw new errors.api404(`user not found`)
+                throw new api404(`user not found`)
             case client:
-                throw new errors.api401('problem with google auth')
+                throw new errorsapi401('problem with google auth')
         }
 
         let weatherData = await user.getForecast()
         
-        if(weatherData instanceof Error) { throw new errors.api404('weather not found') } 
+        if(weatherData instanceof Error) { throw new errorsapi404('weather not found') } 
 
         for (let day of weatherData.forecast){
             var title = `${weatherData.city} - ${day.temp.low}\u00B0/${day.temp.high}\u00B0`
