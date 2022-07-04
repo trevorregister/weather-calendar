@@ -40,12 +40,9 @@ UserSchema.methods.getForecast = async function(){
     const baseUrl = 'https://www.weather.com/weather/tenday'
     const location = this.calendar.location
     var forecast = []
-    try {
-        var response = await axios.get(`${baseUrl}${location}`)
-    }
-    catch (err){
-        return res.status(404).send('weather not found')
-    }
+    
+    try { var response = await axios.get(`${baseUrl}${location}`) }
+    catch (err){ return err }
 
     const $ = cheerio.load(response.data)
 
@@ -70,6 +67,7 @@ UserSchema.methods.getForecast = async function(){
         }
         forecast.push(weather)
     }
+
     return {city, forecast}
 }
 

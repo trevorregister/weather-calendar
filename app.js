@@ -6,6 +6,7 @@ const user_routes = require('./src/routes/users')
 const web_routes = require('./src/routes/web')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
+const errorHandler = require('./src/middleware/errorHandler')
 
 
 const app = express()
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(morgan('dev'))
 app.get('/', web_routes)
 app.use('/api/users', user_routes)
+app.use(errorHandler.returnError)
 
 app.listen(process.env.PORT, ()=>console.log(`Listening on port ${process.env.PORT}...`))
 
