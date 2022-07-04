@@ -1,5 +1,6 @@
 const User = require('../models/user')
 const bcrypt = require('bcryptjs')
+const cookieParser = require('cookie-parser')
 const saltRounds = 10
 
 exports.newUser = async function (req,res){
@@ -16,6 +17,9 @@ exports.newUser = async function (req,res){
         })
 
         await user.save()
+        const token = user.generateAuthToken()
+        res.cookie('authcookie', token, {httpOnly: true, maxage: 300000})
+
         return res.status(201).send('User successfully created')
     }
     catch (error){
@@ -30,14 +34,26 @@ exports.login = async function (req, res){
 
         if(user && match){
             const token = user.generateAuthToken()
-            res.status(200).header('x-auth-token', token).send(token)
+            res.cookie('authcookie', token, {httpOnly: true, maxAge: 300000})
+            return res.status(200).send('login successful')
         }
 
         else return res.status(401).send('Invalid credentials')
     }
 
     catch (error){
-        return error
+        return res.status(500).send('server error')
+    }
+}
+
+exports.logout = async function (req, res){
+    try {
+        if(!req.cookies.authcookie) return res.status(400).send('no auth cookie')
+        res.cookie('authcookie', '')
+        return res.status(200).send('logged out')
+    }
+    catch(error) {
+        return res.status(500).send('server error')
     }
 }
 

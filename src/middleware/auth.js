@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv').config()
 
 module.exports = function (req, res, next) {
-    const token = req.header('x-auth-token')
+    const token = req.cookies.authcookie
 
     if (!token) return res.status(401).send('Invalid credentials')
 
