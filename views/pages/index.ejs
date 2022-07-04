@@ -28,6 +28,27 @@
         <button type="text" class="submit" value="Submit">get me</button>
         </form>
       </div>
+      <div class="form">
+        <form action = "/api/users/logout" method=post>
+        <button type="text" class="submit" value="Submit">logout</button>
+        </form>
+      </div>
+
+
+      <div class="form">
+        <form action = "/api/users/register" method="post">
+        <div class="title">Register</div>
+        <div class="input-container ic2">
+          <input name="email" id="email" class="input" type="text" placeholder=" " />
+          <label for="email" class="placeholder">Email</label>
+        </div>
+        <div class = "input-container ic2">
+            <input name="password" id="password" class="input" type="text"placeholder=" "/>
+            <label for="password" class="placeholder">Password</label>
+        </div>
+        <button type="text" class="submit" value="Submit">Submit</button>
+        </form>
+      </div>
   
 </body>
 </html>
