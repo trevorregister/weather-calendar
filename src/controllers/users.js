@@ -3,14 +3,15 @@ const bcrypt = require('bcryptjs')
 const cookieParser = require('cookie-parser')
 const saltRounds = 10
 const { google } = require('googleapis')
-const settings = require('../../settings.json')
+const settings = require('../../config/settings.json')
 const {api400, api401, api404} = require ('../utils/errors')
+const env = require('../../config/env.json')
 
 
 const SCOPES = 'https://www.googleapis.com/auth/calendar';
 const GOOGLE_PRIVATE_KEY = settings.private_key
 const GOOGLE_CLIENT_EMAIL = settings.client_email
-const GOOGLE_PROJECT_NUMBER = process.env.GOOGLE_PROJECT_NUMBER
+const GOOGLE_PROJECT_NUMBER = env.GOOGLE_PROJECT_NUMBER
 
 exports.newUser = async function (req, res, next){
      try {
@@ -93,7 +94,7 @@ exports.forecast = async function (req, res, next){
         )
         
         const auth = new google.auth.GoogleAuth({
-            keyFile: './settings.json',
+            keyFile: 'config/settings.json',
             scopes: SCOPES
         })
         

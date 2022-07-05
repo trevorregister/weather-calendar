@@ -3,6 +3,7 @@ const Schema = mongoose.Schema
 const jwt = require('jsonwebtoken')
 const cheerio = require('cheerio')
 const axios = require('axios')
+const env = require('../../config/env.json')
 
 const UserSchema = new Schema({
 
@@ -32,7 +33,7 @@ const UserSchema = new Schema({
 })
 
 UserSchema.methods.generateAuthToken = function() {
-    const token = jwt.sign({_id: this._id, role: this.role}, process.env.JWT_SECRET)
+    const token = jwt.sign({_id: this._id, role: this.role}, env.JWT_SECRET)
     return token
 }
 

@@ -1,5 +1,4 @@
 /node_modules
 .env
-settings.js
-settings.json
-test.js
+/config
+run.js
