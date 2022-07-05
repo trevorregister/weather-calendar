@@ -7,10 +7,11 @@ const web_routes = require('./src/routes/web')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
 const errorHandler = require('./src/middleware/errorHandler')
+const testEnv = require('./config/test.json')
 
 
 const app = express()
-mongoose.connect(env.MONGO_URI, ()=>console.log('Connected to database...'))
+mongoose.connect(env.DB, ()=>console.log('Connected to database...'))
 
 app.set('view engine', 'ejs')
 app.use(cookieParser())
