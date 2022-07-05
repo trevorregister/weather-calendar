@@ -1,17 +1,16 @@
 const express = require('express')
 const axios = require('axios')
-const env = require('./config/env.json')
 const morgan = require('morgan')
 const user_routes = require('./src/routes/users')
 const web_routes = require('./src/routes/web')
-const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
 const errorHandler = require('./src/middleware/errorHandler')
-const testEnv = require('./config/test.json')
-
+const env = require('./config/env.json')
+const db = require('./config/db')
 
 const app = express()
-mongoose.connect(env.DB, ()=>console.log('Connected to database...'))
+
+db.connect('test')
 
 app.set('view engine', 'ejs')
 app.use(cookieParser())
