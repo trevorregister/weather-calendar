@@ -10,7 +10,7 @@ const db = require('./config/db')
 
 const app = express()
 
-db.connect('test')
+db.connect('dev')
 
 app.set('view engine', 'ejs')
 app.use(cookieParser())
@@ -21,5 +21,6 @@ app.get('/', web_routes)
 app.use('/api/users', user_routes)
 app.use(errorHandler.returnError)
 
-app.listen(env.PORT, ()=>console.log(`Listening on port ${env.PORT}...`))
+const server = app.listen(env.PORT, ()=>console.log(`Listening on port ${env.PORT}...`))
 
+module.exports = server

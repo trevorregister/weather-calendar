@@ -13,7 +13,6 @@ async function connect(environment){
 
     var connection = await mongoose.connect(uri)
     console.log(`Connected to ${connection.connections[0].name}`)
-    return connection.name
 } 
 
 module.exports = {connect}
