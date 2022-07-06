@@ -1,0 +1,23 @@
+{
+    "valid": {
+        "email": "user1@example.com",
+        "location": "/l/Marietta+GA?canonicalCityId=cbc1689619d2c1dd1ee27ff61e72b5ead7f7f24a76e15150d52b16224471599b",
+        "password": "asdf"
+    },
+
+    "noEmail": {
+        "location": "earth2",
+        "password": "asdf"
+    },
+
+    "noPassword": {
+        "email": "user3@example.com",
+        "location": "earth3"
+    },
+
+    "invalidEmail": {
+        "email": "user4",
+        "location": "earth4",
+        "password": "asdf"
+    }
+}
