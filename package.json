@@ -1,10 +1,13 @@
 {
   "name": "weather-calendar",
+  "jest": {
+    "testPathIgnorePatterns": ["__tests__/data"]
+  },
   "version": "1.0.0",
   "description": "adds 2 week daily weather forcast to gcal",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "nodemon app.js"
   },
   "repository": {
@@ -29,6 +32,10 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.4.2",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.18"
+    "nodemon": "^2.0.18",
+    "supertest": "^6.2.4"
+  },
+  "devDependencies": {
+    "jest": "^28.1.2"
   }
 }
