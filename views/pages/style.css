@@ -1,52 +1,59 @@
-* {
-  box-sizing: border-box;
+body  
+{  
+    margin: 0;  
+    padding: 0;  
+    background-color:#236AB9;  
+    font-family: 'Calibri';  
+}  
+
+.inputForm{
+    width: 332px;
+    overflow: hidden;
+    margin: auto;
+    padding: 2rem;
+    background: #F7E7D4;
+    border-radius: 20px;
 }
 
-html {
-  font-family: sans-serif;
+h2{
+    text-align:center;
+    color: #091834;
+    padding: 2px;
+    margin: auto;
 }
 
-body {
-  margin: 0;
+label{
+    color: #091834;
+    font-size: 18px;
 }
 
-#app {
-  margin: 3rem auto;
-  max-width: 40rem;
-  padding: 1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+.container{
+    padding: 2%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
-label, input {
-  margin-bottom: 0.5rem;
-  display: block;
-  width: 100%;
+.textInput{
+    width: 300px;
+    height: 30px;
+    border: none;
+    border-radius: 3px;
+    padding-left: 8px;
+
 }
 
-label {
-  font-weight: bold;
+.submit{
+    margin-top:10px;
+    width: 300px;
+    height: 30px;
+    border-radius: 17px;
+    padding-left: 7px;
+    color: #091834;
+    background-color: #f7e7d4;
 }
 
-button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 6px 14px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
-  border-radius: 6px;
-  margin:10px;
-  border: none;
-
-  color: #fff;
-  background: linear-gradient(180deg, #4B91F7 0%, #367AF6 100%);
-   background-origin: border-box;
-  box-shadow: 0px 0.5px 1.5px rgba(54, 122, 246, 0.25), inset 0px 0.8px 0px -0.25px rgba(255, 255, 255, 0.2);
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-}
-
-button:focus {
-  box-shadow: inset 0px 0.8px 0px -0.25px rgba(255, 255, 255, 0.2), 0px 0.5px 1.5px rgba(54, 122, 246, 0.25), 0px 0px 0px 3.5px rgba(58, 108, 217, 0.5);
-  outline: 0;
+.submit:hover{
+    background-color: #FB8604;
 }
